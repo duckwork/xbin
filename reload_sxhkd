@@ -1,0 +1,19 @@
+#!/usr/bin/env dash
+# vim:ft=sh
+
+. $WMRC
+
+notify() {
+    mw=$(wattr w $WRT)
+    bw=200
+    bh=10
+    bx=$((mw - bw - 5))
+    by=10
+    { echo $@ ; sleep 2 ; } | lemonbar -g${bw}x${bh}+${bx}+${by}
+}
+
+if pgrep sxhkd; then
+    pkill -USR1 -x sxhkd && notify "SXHKD reloaded."
+else
+    sxhkd &
+fi
