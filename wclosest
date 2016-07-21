@@ -17,40 +17,40 @@ EOF
 _west() {
     case $1 in
         next)
-            lsw | xargs wattr yxi | sort -nr | sed "0,/$PFW/d" | cut -d' ' -f3
+            lsw | xargs wattr yxi | sort -nr | sed "0,/$PFW/d" | cut -f3
             ;;
         first)
-            lsw | xargs wattr yxi | sort -nr | grep -v $PFW | cut -d' ' -f3
+            lsw | xargs wattr yxi | sort -nr | grep -v $PFW | cut -f3
             ;;
     esac
 }
 _east() {
     case $1 in
         next)
-            lsw | xargs wattr yxi | sort -n  | sed "0,/$PFW/d" | cut -d' ' -f3
+            lsw | xargs wattr yxi | sort -n  | sed "0,/$PFW/d" | cut -f3
             ;;
         first)
-            lsw | xargs wattr yxi | sort -n  | grep -v $PFW | cut -d' ' -f3
+            lsw | xargs wattr yxi | sort -n  | grep -v $PFW | cut -f3
             ;;
     esac
 }
 _north() {
     case $1 in
         next)
-            lsw | xargs wattr xyi | sort -nr | sed "0,/$PFW/d" | cut -d' ' -f3
+            lsw | xargs wattr xyi | sort -nr | sed "0,/$PFW/d" | cut -f3
             ;;
         first)
-            lsw | xargs wattr xyi | sort -nr | grep -v $PFW | cut -d' ' -f3
+            lsw | xargs wattr xyi | sort -nr | grep -v $PFW | cut -f3
             ;;
     esac
 }
 _south() {
     case $1 in
         next)
-            lsw | xargs wattr xyi | sort -n  | sed "0,/$PFW/d" | cut -d' ' -f3
+            lsw | xargs wattr xyi | sort -n  | sed "0,/$PFW/d" | cut -f3
             ;;
         first)
-            lsw | xargs wattr xyi | sort -n  | grep -v $PFW | cut -d' ' -f3
+            lsw | xargs wattr xyi | sort -n  | grep -v $PFW | cut -f3
             ;;
     esac
 }

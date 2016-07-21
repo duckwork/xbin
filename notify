@@ -2,6 +2,7 @@
 # vim:ft=sh
 
 . $WMRC
+WRT=$(lsw -r)
 
 # TODO: better option handling & options
 while [ "$(expr index "$1" -)" = 1 ]; do
