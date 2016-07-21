@@ -5,11 +5,11 @@
 PFW=$(pfw)
 
 usage() {
-    test -n $1 && echo $1;
     cat >&2 << EOF
     $(basename $0) <next|prev|id>
     Changes focus to next/prev window in stack,
-    or to $wid.  Also raises the window.
+    or to <wid>.  Also raises the window and
+    moves the mouse to its top-left corner.
 EOF
     return $ERRUSE
 }
