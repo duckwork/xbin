@@ -1,0 +1,54 @@
+#!/usr/bin/dash
+# vim:ft=sh
+
+. $WMRC
+PFW=$(pfw)
+
+usage() {
+    test -n $1 && echo $1;
+    cat >&2 << EOF
+    $(basename $0) <next|prev|id>
+    Changes focus to next/prev window in stack,
+    or to $wid.  Also raises the window.
+EOF
+    return $ERRUSE
+}
+
+setborder() { # <active|inactive> <wid>
+    wattr $2 || return $ERRWIN
+    # make sure it ain't root
+    test "$(wattr xywh $2)" = "$(wattr xywh $WRT)" && return $ERRWIN
+    case $1 in
+        focus)
+            chwb2 -I $FocusColor -O $OuterColor \
+                  -i $InnerBorder -o $OuterBorder \
+                  $2
+            ;;
+        normal)
+            chwb2 -I $NormColor -O $OuterColor \
+                  -i $InnerBorder -o $OuterBorder \
+                  $2
+            ;;
+    esac
+}
+
+# main
+case $1 in
+    next) wid=$(lsw       | grep -v $PFW | sed '1 p;d') ;;
+    prev) wid=$(lsw | tac | grep -v $PFW | sed '$ p;d') ;;
+    0x*)  wattr $1 && wid=$1                            ;;
+    *)
+        usage "Argument unknown: $@";
+        exit $ERRARG
+        ;;
+esac
+
+test -z "$wid" && \
+    echo "$(basename $0): can't find window" >&2 && \
+    exit $ERRWIN
+
+setborder normal $PFW
+setborder active $wid
+chwso -r $wid
+wmp -a $(wattr xy $wid)
+wtf $wid
