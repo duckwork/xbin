@@ -1,0 +1,4 @@
+#!/usr/bin/env dash
+# vim:ft=sh
+
+lsw | xargs wattr yxi | sort -n | sed "0,/$(pfw)/d" | cut -f3;

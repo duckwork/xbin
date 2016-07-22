@@ -1,0 +1,6 @@
+#!/usr/bin/env dash
+# vim:ft=sh
+# Find previous window in stack
+
+test -n "$1" && e="./$@" || e="lsw | tac";
+$e | grep -v $(pfw) | sed '$ p;d';
