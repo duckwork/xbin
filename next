@@ -1,4 +1,4 @@
-#!/usr/bin/env dash
+#!/bin/sh
 # vim:ft=sh
 # Find next window in stack
 
