@@ -1,12 +1,11 @@
 #!/bin/sh
+# Focus Window
 
 . $WMRC
 ARGS="<wid>";
-WRT=$(lsw -r);
-PFW=$(pfw);
 
 setborder() { # <focus|normal> <wid>
-    # TODO: expand to allow for arbitrary schemes
+    # TODO: expand to allow for arbitrary color schemes
     set -u;
     test $# -eq 2 || return $ERRARG;
     wattr $2 || return $ERRWIN;
@@ -25,13 +24,13 @@ setborder() { # <focus|normal> <wid>
 }
 
 focid() { # <wid>
-    wattr $1 && wid=$1 || {
+    wattr $1 || {
         usage $ERRWIN "Can't find window '$wid'";
     }
     setborder normal $PFW;
-    setborder focus  $wid;
-    chwso -r $wid; # TODO: make this optional with flag
-    wtf $wid;
+    setborder focus  $1;
+    chwso -r $1; # TODO: make this optional with flag
+    wtf $1;
 }
 
 test $# -eq 0 && { focid $PFW; exit $SUCCESS; }
@@ -41,5 +40,4 @@ case "$1" in
     *)   isExecutable $1 || exit $ERREXE;
          focid $($@);
     ;;
- esac
 esac

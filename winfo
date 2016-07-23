@@ -1,0 +1,30 @@
+#!/bin/sh
+# show Window Info
+
+. $WMRC
+ARGS="<query> <wid..>"
+query=$1; shift;
+
+test $# -gt 0 || exit $ERRARG;
+for wid in $@; do
+    if lsw -a | grep -q "$wid"; then
+        case $query in
+            name)
+                xprop -id "$wid" WM_CLASS | cut -d\" -f2;
+                ;;
+            class)
+                xprop -id "$wid" WM_CLASS | cut -d\" -f4;
+                ;;
+            pid)
+                xprop -id "$wid" _NET_WM_PID | cut -d' ' -f3;
+                ;;
+            title)
+                xprop -id "$wid" _NET_WM_NAME | cut -d\" -f2- | head -c -2;
+                echo;
+                ;;
+        esac
+        unset -v wid;
+    else
+        exit $ERRWIN;
+    fi
+done

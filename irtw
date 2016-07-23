@@ -1,5 +1,5 @@
 #!/bin/sh
-# In Regard To Window
+# Return a point, In Regard To Window
 
 . $WMRC
 ARGS="<tl|tr|bl|br|wc> <wid>"
