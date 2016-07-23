@@ -1,0 +1,23 @@
+#!/bin/sh
+# Window Under Pointer
+
+. $WMRC
+WRT=$(lsw -r)
+PFW=$(pfw)
+ARGS="<x> <y>"
+
+test $# -eq 2 || usage $ERRARG;
+
+for wid in $(lsw | tac); do
+    read wxy wy ww wh << end
+    $(wattr xywh $wid)
+end
+    test $wx -gt $x            && continue;
+    test $wy -gt $y            && continue;
+    test $(( wx + ww )) -lt $x && continue;
+    test $(( wy + wh )) -lt $y && continue;
+    echo "$wid"; exit $SUCCESS
+    unset -v wid
+done
+
+exit $ERRWIN # no window under pointer

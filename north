@@ -1,4 +1,0 @@
-#!/bin/sh
-# vim:ft=sh
-
-lsw | xargs wattr xyi | sort -nr | sed "0,/$(pfw)/d" | cut -f3;

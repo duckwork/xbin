@@ -1,0 +1,22 @@
+#!/bin/sh
+# In Regard To Window
+
+. $WMRC
+ARGS="<tl|tr|bl|br|wc> <wid>"
+
+test $# -eq 2 || usage $ERRARG;
+
+read wx wy ww wh << end
+$(wattr xywh $2)
+end
+
+case $1 in
+    tl) x=$wx; y=$wy                           ;;
+    tr) x=$((wx + ww)); y=$wy                  ;;
+    bl) x=$wx; y=$((wy + wh))                  ;;
+    br) x=$((wx + ww)); y=$((wy + wh))         ;;
+    wc) x=$((wx + wh / 2)); y=$((wy + wh / 2)) ;;
+    *)  usage $ERRARG "Unknown argument: $1"   ;;
+esac
+
+printf '%s\t%s\n' $x $y

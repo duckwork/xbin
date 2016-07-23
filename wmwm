@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# spin some shit up, hold X open
+
+wew | while IFS=: read ev wid; do
+    case $ev in
+        7) # XCB_ENTER_NOTIFY
+            wattr o $wid || fw $wid
+            ;;
+        16) # XCB_CREATE_NOTIFY
+            wattr o $wid || fw $wid;
+            ;;
+        17) # XCB_DESTROY_NOTIFY
+            ;;
+        18) # XCB_UNMAP_NOTIFY
+            wattr "$(pfw)" || fw prev
+            ;;
+        19) # XCB_MAP_NOTIFY
+            ;;
+    esac
+done
