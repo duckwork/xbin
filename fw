@@ -4,6 +4,8 @@
 . $WMRC
 ARGS="<wid>";
 
+SLOPPY_RAISE=${SLOPPY_RAISE:-0};
+
 setborder() { # <focus|normal> <wid>
     # TODO: expand to allow for arbitrary color schemes
     set -u;
@@ -29,11 +31,13 @@ focid() { # <wid>
     }
     setborder normal $PFW;
     setborder focus  $1;
-    chwso -r $1; # TODO: make this optional with flag
+    test $SLOPPY_RAISE -eq 1 && chwso -r $1;
     wtf $1;
+    echo $(pfw)
 }
 
 test $# -eq 0 && { focid $PFW; exit $SUCCESS; }
+test "$1" = "-r" && { SLOPPY_RAISE=1; shift; }
 
 case "$1" in
     0x*) focid $1 ;;

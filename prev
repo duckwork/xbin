@@ -1,5 +1,9 @@
 #!/bin/sh
 # Find previous window in stack
 
-test $# -ne 0 && e="$@" || e="lsw | tac";
+wsl() {
+    lsw | tac
+}
+
+test $# -eq 0 && e="wsl" || e="$@";
 $e | grep -v $(pfw) | sed '$ p;d';

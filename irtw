@@ -2,21 +2,28 @@
 # Return a point, In Regard To Window
 
 . $WMRC
-ARGS="<tl|tr|bl|br|wc> <wid>"
+ARGS="<tl|tr|bl|br|md>[i] <wid..>"
 
-test $# -eq 2 || usage $ERRARG;
+test $# -ge 2 || usage $ERRARG;
+corner=$1; shift;
 
-read wx wy ww wh << end
-$(wattr xywh $2)
+for wid in $@; do
+    read wx wy ww wh << end
+    $(wattr xywh $wid)
 end
-
-case $1 in
-    tl) x=$wx; y=$wy                           ;;
-    tr) x=$((wx + ww)); y=$wy                  ;;
-    bl) x=$wx; y=$((wy + wh))                  ;;
-    br) x=$((wx + ww)); y=$((wy + wh))         ;;
-    wc) x=$((wx + wh / 2)); y=$((wy + wh / 2)) ;;
-    *)  usage $ERRARG "Unknown argument: $1"   ;;
-esac
-
-printf '%s\t%s\n' $x $y
+    case $corner in
+        tl*) x=$wx; y=$wy                           ;;
+        tr*) x=$((wx + ww)); y=$wy                  ;;
+        bl*) x=$wx; y=$((wy + wh))                  ;;
+        br*) x=$((wx + ww)); y=$((wy + wh))         ;;
+        md*) x=$((wx + wh / 2)); y=$((wy + wh / 2)) ;;
+        *)  usage $ERRARG "Unknown argument: $1"   ;;
+    esac
+    printf '%s\t%s' $x $y;
+    if charIsInStr i $corner; then
+        printf '\t%s\n' $wid;
+    else
+        printf '\n';
+    fi
+    unset -v x y wx wy ww wh wid;
+done

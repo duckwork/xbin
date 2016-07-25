@@ -1,11 +1,15 @@
 #!/bin/sh
-
 # spin some shit up, hold X open
+
+. $WMRC
+SLOPPY=${SLOPPY:-0}
 
 wew | while IFS=: read ev wid; do
     case $ev in
         7) # XCB_ENTER_NOTIFY
-            wattr o $wid || fw $wid
+            if [ $SLOPPY -eq 1 ]; then
+                wattr o $wid || fw $wid
+            fi
             ;;
         16) # XCB_CREATE_NOTIFY
             wattr o $wid || fw $wid;

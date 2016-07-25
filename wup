@@ -1,13 +1,19 @@
 #!/bin/sh
-# Window Under Pointer
+# Window Under Point
 
 . $WMRC
 WRT=$(lsw -r)
 PFW=$(pfw)
-ARGS="<x> <y>"
+ARGS="[<x> <y>]"
 
-test $# -eq 2 || usage $ERRARG;
-x=$1; y=$2;
+test $# -eq 0 && {
+    read x y << end
+    $(wmp)
+end
+} || {
+    test $# -eq 2 || usage $ERRARG;
+    x=$1; y=$2;
+}
 
 for wid in $(lsw | tac); do
     read wx wy ww wh << end
@@ -22,4 +28,4 @@ end
     unset -v wid;
 done
 
-exit $ERRWIN # no window under pointer
+exit $ERRWIN # no window under point
