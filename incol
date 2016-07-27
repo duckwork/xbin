@@ -1,0 +1,15 @@
+#!/bin/dash
+
+. $WMRC
+ARGS=""
+
+gwc cur $(pfw);
+
+test $# -ne 0 && e="$@" || e=lsw;
+$e | grep -v $(pfw) | \
+while read wid; do
+    gwc win $wid;
+    test $(( winx + winw )) -lt $curx && continue;
+    test $(( curx + curw )) -lt $winx && continue;
+    echo $wid;
+done
