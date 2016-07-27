@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/dash
 # Focus Window
 
 . $WMRC
@@ -26,7 +26,7 @@ setborder() { # <focus|normal> <wid>
 }
 
 focid() { # <wid>
-    wattr $1 || {
+    wattr $1 2>/dev/null || {
         usage $ERRWIN "Can't find window '$wid'";
     }
     setborder normal $PFW;

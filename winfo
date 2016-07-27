@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/dash
 # show Window Info
 
 . $WMRC

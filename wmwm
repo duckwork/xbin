@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/dash
 # spin some shit up, hold X open
 
 . $WMRC

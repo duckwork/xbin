@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/dash
 # Window Under Point
 
 . $WMRC
@@ -16,9 +16,7 @@ end
 }
 
 for wid in $(lsw | tac); do
-    read wx wy ww wh << end
-    $(wattr xywh $wid)
-end
+    gwc w $wid;
     test $wx -gt $x            && continue;
     test $wy -gt $y            && continue;
     test $(( wx + ww )) -lt $x && continue;
