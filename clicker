@@ -1,6 +1,5 @@
 #!/bin/dash
 
-. $WMRC
 ARGS="[<x> <y>]"
 
 test $# -eq 0 && {
@@ -8,7 +7,7 @@ test $# -eq 0 && {
     $(wmp)
 end
 } || {
-    test $# -eq 2 || usage $ERRARG;
+    test $# -eq 2 || usage 2;
     x=$1; y=$2;
 }
 
