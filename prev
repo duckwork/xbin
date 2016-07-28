@@ -2,4 +2,4 @@
 # Find previous window in stack
 
 test $# -eq 0 && e="lsw" || e="$@";
-$e | grep -vx "$(pfw)" | sed '$ p;d';
+$e | grep -vx "$(pfw)" | tail -n1;
