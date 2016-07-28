@@ -33,7 +33,6 @@ focid() { # <wid>
     setborder focus  $1;
     test $SLOPPY_RAISE -eq 1 && chwso -r $1;
     wtf $1;
-    echo $(pfw)
 }
 
 test $# -eq 0 && { focid $PFW; exit $SUCCESS; }
