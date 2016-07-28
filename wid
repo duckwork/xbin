@@ -1,0 +1,34 @@
+#!/bin/dash
+
+nameAll() {
+    for wid in $(lsw); do
+        printf '%s\t%s\n' "$wid" "$(winfo name "$wid")";
+    done
+}
+
+classAll() {
+    for wid in $(lsw); do
+        printf '%s\t%s\n' "$wid" "$(winfo class "$wid")";
+    done
+}
+
+titleAll() {
+    for wid in $(lsw); do
+        printf '%s\t%s\n' "$wid" "$(winfo title "$wid")";
+    done
+}
+
+pidAll() {
+    for wid in $(lsw); do
+        printf '%s\t%s\n' "$wid" "$(winfo pid "$wid")";
+    done
+}
+
+searchAll() {
+    nameAll;
+    classAll;
+    titleAll;
+    pidAll;
+}
+
+searchAll | grep -i "$@" | cut -f1 | sort | uniq
