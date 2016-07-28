@@ -1,9 +1,5 @@
 #!/bin/dash
 # Find previous window in stack
 
-wsl() {
-    lsw | tac
-}
-
-test $# -eq 0 && e="wsl" || e="$@";
-$e | grep -v $(pfw) | sed '$ p;d';
+test $# -eq 0 && e="lsw" || e="$@";
+$e | grep -vx "$(pfw)" | sed '$ p;d';

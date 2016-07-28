@@ -2,4 +2,4 @@
 # Find next window in stack
 
 test $# -ne 0 && e="$@" || e=lsw;
-$e | grep -v $(pfw) | sed '1 p;d';
+$e | grep -vx $(pfw) | sed '1 p;d';

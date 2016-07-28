@@ -3,10 +3,10 @@
 . $WMRC
 ARGS=""
 
-gwc cur $(pfw);
+gwc cur "$PFW";
 
 test $# -ne 0 && e="$@" || e=lsw;
-$e | grep -v $(pfw) | \
+$e | grep -vx "$PFW" | \
 while read wid; do
     gwc win $wid;
     test $(( winx + winw )) -lt $curx && continue;
