@@ -2,8 +2,6 @@
 # Window Under Point
 
 . $WMRC
-WRT=$(lsw -r)
-PFW=$(pfw)
 ARGS="[<x> <y>]"
 
 test $# -eq 0 && {
