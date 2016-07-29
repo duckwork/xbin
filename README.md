@@ -34,6 +34,9 @@ List of included utilities and their usage:
 - `wup`
     - return the **Window Under Point**.  Takes a point as input.
 
+[patched dmenu]: https://github.com/duckwork/dmenu-duck
+[wildefyr's script]: https://github.com/wildefyr/fyre/blob/master/wid
+
 ## Command chains
 
 I keep talking about "command chains" here, though I don't really think that's
