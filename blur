@@ -1,0 +1,13 @@
+#!/bin/dash
+
+# based heavily (as always) on wildefyr
+
+WALL=$HOME/images/wall.jpg; # TODO: change this later
+
+if [ $(lsw | wc -l) -eq 0 ]; then
+    BLUR=0;
+else
+    BLUR=${1:-10};
+fi
+
+hsetroot -fill $WALL -blur $BLUR;

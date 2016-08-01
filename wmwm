@@ -3,25 +3,36 @@
 
 SLOPPY=${SLOPPY:-0}
 
+restart() {
+    exec wmwm;
+}
+trap restart USR1;
+
 wew | while IFS=: read ev wid; do
     . $WMRC
     case $ev in
         7) # XCB_ENTER_NOTIFY
             if [ $SLOPPY -eq 1 ]; then
-                wattr o $wid || fw $wid;
+                wattr o $wid || {
+                    fw $wid;
+                }
             fi
             ;;
         16) # XCB_CREATE_NOTIFY
             case "$(winfo class $wid)" in
                 *)
-                    wattr o $wid || fw $wid;
+                    wattr o $wid || {
+                        fw $wid;
+                        blur;
+                    }
                     ;;
             esac
             ;;
         17) # XCB_DESTROY_NOTIFY
             ;;
         18) # XCB_UNMAP_NOTIFY
-             wattr "$(pfw)" || fw prev;
+            blur;
+            wattr "$(pfw)" || fw prev;
             ;;
         19) # XCB_MAP_NOTIFY
             ;;

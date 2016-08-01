@@ -31,6 +31,8 @@ focid() { # <wid>
     }
     setborder normal $PFW;
     setborder focus  $1;
+    xprop -id $PFW -f WM_FOCUS 8c -set WM_FOCUS 0;
+    xprop -id $1   -f WM_FOCUS 8c -set WM_FOCUS 1;
     test $SLOPPY_RAISE -eq 1 && chwso -r $1;
     wtf $1;
 }
