@@ -31,4 +31,6 @@ searchAll() {
     pidAll;
 }
 
-searchAll | grep -i "$@" | cut -f1 | sort | uniq
+result="$(searchAll | grep -i "$@" | cut -f1 | sort | uniq)"
+test -z "$result" && exit 1;
+echo "$result";

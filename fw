@@ -1,10 +1,12 @@
 #!/bin/dash
 # Focus Window
+# vim:ft=sh
 
 . $WMRC
 ARGS="<wid>";
 
-SLOPPY_RAISE=${SLOPPY_RAISE:-0};
+WINDOW_RAISE=${WINDOW_RAISE:-0};
+WARP_POINTER=${WARP_POINTER:-0};
 
 setborder() { # <focus|normal> <wid>
     # TODO: expand to allow for arbitrary color schemes
@@ -15,12 +17,14 @@ setborder() { # <focus|normal> <wid>
     chwb -s $BorderWidth $2;
     case $1 in
         focus)
-            chwb2 -I $FocusColor -O $OuterColor \
-                  -i $InnerBorder -o $OuterBorder $2
+            # chwb2 -I $FocusColor -O $OuterColor \
+            #       -i $InnerBorder -o $OuterBorder $2
+            chwb -s $((BorderWidth)) -c $FocusColor $2;
             ;;
         normal)
-            chwb2 -I $NormColor -O $OuterColor \
-                  -i $InnerBorder -o $OuterBorder $2
+            # chwb2 -I $NormColor -O $OuterColor \
+            #       -i $InnerBorder -o $OuterBorder $2
+            chwb -s $((BorderWidth)) -c $NormColor $2;
             ;;
     esac
 }
@@ -33,16 +37,27 @@ focid() { # <wid>
     setborder focus  $1;
     xprop -id $PFW -f WM_FOCUS 8c -set WM_FOCUS 0;
     xprop -id $1   -f WM_FOCUS 8c -set WM_FOCUS 1;
-    test $SLOPPY_RAISE -eq 1 && chwso -r $1;
+    test $WARP_POINTER -eq 1 && wmp $(irtw md $1);
+    test $WINDOW_RAISE -eq 1 && chwso -r $1;
     wtf $1;
 }
 
 test $# -eq 0 && { focid $PFW; exit $SUCCESS; }
-test "$1" = "-r" && { SLOPPY_RAISE=1; shift; }
+
+# handle flags
+while expr "$1" : "-.*" >/dev/null 2>&1; do
+    case "$1" in
+        -r) WINDOW_RAISE=1 ;;
+        -p) WARP_POINTER=1 ;;
+    esac
+    shift;
+done
 
 case "$1" in
     0x*) focid $1 ;;
-    *)   isExecutable $1 || exit $ERREXE;
-         focid $($@);
+    *)
+        test -z $1 && { focid $(pfw); exit $SUCCESS; }
+        isExecutable $1 || exit $ERREXE;
+        focid $($@);
     ;;
 esac

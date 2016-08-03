@@ -1,0 +1,23 @@
+#!/bin/dash
+
+. $WMRC
+
+test -z "$1" && exit $ERRWIN;
+
+gwc w $1;
+
+x=$(( wx / WindowStep * WindowStep ));
+y=$(( wy / WindowStep * WindowStep ));
+w=$(( ww / WindowStep * WindowStep ));
+h=$(( wh / WindowStep * WindowStep ));
+
+test $x -lt $BorderLeft && x=$BorderLeft;
+test $y -lt $BorderTop && y=$BorderTop;
+test $((x + w)) -gt $((MW - BorderRight)) && x=$((MW - w - BorderRight));
+test $((y + h)) -gt $((MH - BorderBottom)) && y=$((MH - h - BorderBottom));
+
+# get them fullscreen windows
+test $w -ge $((MW - BorderRight - BorderLeft)) && w=$((MW - BorderRight - BorderLeft));
+test $h -ge $((MH - BorderTop - BorderBottom)) && h=$((MH - BorderTop - BorderBottom));
+
+wtp $x $y $w $h $1

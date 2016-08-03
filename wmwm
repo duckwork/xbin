@@ -1,6 +1,7 @@
 #!/bin/dash
 # spin some shit up, hold X open
 
+. $WMRC
 SLOPPY=${SLOPPY:-0}
 
 restart() {
@@ -23,18 +24,36 @@ wew | while IFS=: read ev wid; do
                 *)
                     wattr o $wid || {
                         fw $wid;
-                        blur;
                     }
                     ;;
             esac
             ;;
+        19) # XCB_MAP_NOTIFY
+            case "$(winfo class $wid)" in
+                [dD]menu)
+                    chwso -r $wid;
+                    ;;
+                *)
+                    blur;
+                    placew $wid;
+                    ;;
+            esac
+            ;;
         17) # XCB_DESTROY_NOTIFY
+            case "$(winfo class $wid)" in
+                [dD]menu)
+                    ;;
+            esac
             ;;
         18) # XCB_UNMAP_NOTIFY
-            blur;
-            wattr "$(pfw)" || fw prev;
-            ;;
-        19) # XCB_MAP_NOTIFY
+            case "$(winfo class $wid)" in
+                [dD]menu)
+                    ;;
+                *)
+                    blur;
+                    wattr "$(pfw)" || fw prev;
+                    ;;
+            esac
             ;;
     esac
 done

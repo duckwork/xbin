@@ -3,10 +3,14 @@
 
 . $WMRC
 ARGS="<query> <wid..>"
-query=$1; shift;
+SHOW_ID=0;
 
 test $# -gt 0 || exit $ERRARG;
+test $1 = "-id" && { SHOW_ID=1; shift; }
+query=$1; shift;
+
 for wid in $@; do
+    test $SHOW_ID -eq 1 && printf '%s    ' "$wid";
     if lsw -a | grep -q "$wid"; then
         case $query in
             name)
