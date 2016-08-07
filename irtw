@@ -1,13 +1,13 @@
-#!/bin/dash
-# Return a point, In Regard To Window
+#!/bin/sh
+# return a point In Regard To Window
 
-. $WMRC
+. ./util.sh
 ARGS="<tl|tr|bl|br|md> <wid>"
 
 test $# -eq 2 || usage $ERRARG;
 corner=$1; wid=$2;
 
-gwc w $wid;
+reads wx wy ww wh -- wattr xywh $wid;
 
 case $corner in
     tl*) x=$wx; y=$wy;                           ;;

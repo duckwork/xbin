@@ -1,11 +1,11 @@
-#!/bin/dash
-# show Window Info
+#!/bin/sh
+# Window Info
 
 . $WMRC
 ARGS="<query> <wid..>"
 SHOW_ID=0;
 
-test $# -gt 0 || exit $ERRARG;
+test $# -gt 0 || usage $ERRARG;
 test $1 = "-id" && { SHOW_ID=1; shift; }
 query=$1; shift;
 

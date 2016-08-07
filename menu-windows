@@ -1,0 +1,11 @@
+#!/bin/sh
+
+DMENU_OPTS="-i -n -p w -h 20 -w 350 -l 10"
+
+n=1;
+lsw | tac | xargs winfo -id title |\
+while read wid wtitle; do
+    printf '%s: %s (%s)\n' $n "${wtitle}" $wid;
+    n=$((n + 1));
+done | dmenu $DMENU_OPTS -fn 'Luxi Mono:size=10' | \
+       sed 's/.*(\(.*\))$/\1/' | xargs fw -p -r;

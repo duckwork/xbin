@@ -1,5 +1,4 @@
-#!/bin/dash
-# Find previous window in stack
+#!/bin/sh
 
 test $# -eq 0 && e="lsw" || e="$@";
 $e | grep -vx "$(pfw)" | tail -n1;

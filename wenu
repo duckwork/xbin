@@ -1,7 +1,0 @@
-#!/bin/dash
-
-DMENU_OPTS="-i -p w -h 20 -w 200 -l 10"
-
-lsw | tac | xargs winfo -id title | \
-    dmenu $DMENU_OPTS -fn 'Luxi Mono:size=10' | \
-    cut -d\  -f1- | xargs fw -r -p

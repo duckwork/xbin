@@ -1,4 +1,8 @@
-#!/bin/dash
+#!/bin/sh
 
 test $# -ne 0 && e="$@" || e=lsw;
-$e | xargs wattr yi | sort -nr | sed "0,/$(pfw)/d" | cut -f2;
+$e | \
+xargs wattr yi | \
+sort -nr | \
+sed "0,/$(pfw)/d" | \
+cut -f2;

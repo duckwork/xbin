@@ -1,0 +1,39 @@
+#!/bin/sh
+
+pophud() {
+    echo "N$@" >$HUD_FIFO;
+    sleep 3;
+    pgrep -x "$(basename $0)" | grep -v $$ || {
+        echo N>$HUD_FIFO;
+    }
+}
+
+getvolume() {
+    amixer sget Master | awk -F '[][]' '/dB/{print $2}'
+}
+getbrightness() {
+    bl=$(xbacklight -get);
+    echo "${bl%.*}";
+}
+
+loud() {
+    amixer sset Master 5+ >/dev/null 2>&1;
+    pophud "volume:$(getvolume)";
+}
+
+soft() {
+    amixer sset Master 5- >/dev/null 2>&1;
+    pophud "volume:$(getvolume)";
+}
+
+bright() {
+    xbacklight -inc 10;
+    pophud "brightness:$(getbrightness)";
+}
+
+dim() {
+    xbacklight -dec 10;
+    pophud "brightness:$(getbrightness)";
+}
+
+$1;

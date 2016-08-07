@@ -1,14 +1,15 @@
-#!/bin/dash
+#!/bin/sh
 
 . $WMRC
+. ./util.sh
 ARGS=""
 
-gwc cur "$PFW";
+reads cury curh -- wattr yh "$PFW";
 
 test $# -ne 0 && e="$@" || e=lsw;
-$e | grep -vx "$PFW" | \
+$e | grep -vs "$PFW" |\
 while read wid; do
-    gwc win $wid;
+    reads winy winh -- wattr yh "$wid";
     test $(( winy + winh )) -lt $cury && continue;
     test $(( cury + curh )) -lt $winy && continue;
     echo $wid;

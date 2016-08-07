@@ -1,8 +1,12 @@
-#!/bin/dash
+#!/bin/sh
 
-# based heavily (as always) on wildefyr
-
-WALL=$HOME/images/wall.jpg; # TODO: change this later
+test -f $WALL || {
+    test -f /tmp/grandom || {
+        grandom;
+        echo 1 >/tmp/grandom;
+    }
+    exit 1;
+}
 
 if [ $(lsw | wc -l) -eq 0 ]; then
     BLUR=0;

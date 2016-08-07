@@ -1,5 +1,4 @@
-#!/bin/dash
-# Find next window in stack
+#!/bin/sh
 
 test $# -ne 0 && e="$@" || e=lsw;
 $e | grep -vx $(pfw) | head -n1;
