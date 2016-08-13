@@ -1,5 +1,7 @@
 #!/usr/bin/bash
 
+. $WMRC
+
 NOTIFY_FIFO="${NOTIFY_FIFO:-/tmp/notify.fifo}"
 NOTIFY_COUNTER="${NOTIFY_COUNTER:-/tmp/notify.count}"
 test -p $NOTIFY_FIFO || mkfifo $NOTIFY_FIFO
@@ -30,7 +32,7 @@ sn 0
 popup() {
     x=$1; y=$2; w=$3; h=$4; shift 4;
     { echo "%{r}$@ "; sleep 3; } | \
-    lemonbar -d -n popup -B#222 \
+    lemonbar -d -n popup -B#${CBG} \
     -g ${w}x${h}+${x}+${y}
 }
 
