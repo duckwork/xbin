@@ -2,7 +2,7 @@
 # Focus Window
 
 . $WMRC
-. ./util.sh
+. util.sh
 ARGS="<wid|func->wid>"
 
 WINDOW_RAISE=0;

@@ -1,7 +1,15 @@
 #!/bin/sh
 
 . $WMRC
-. ./util.sh
+. util.sh
+
+restart() {
+    for prg in $XDG_CONFIG_HOME/hud/?*.sh; do
+        pkill -x "$(basename $prg)";
+    done
+    exec $(realpath $0);
+}
+trap restart USR1;
 
 output="";
 
@@ -23,19 +31,18 @@ done
 while read -r line; do
     case "$line" in
         T*) # Time
-            time=" ${line#?} "
-            ;;
+            time=" ${line#?} " ;;
         B*) # Battery
-            bat=" ${line#?} "
-            ;;
+            bat=" ${line#?} " ;;
+        W*) # Wifi
+            net=" ${line#?} " ;;
         N*) # Notification
-            notif=" ${line#?} "
-            ;;
+            notif=" ${line#?} " ;;
     esac
     printf "%s%s%s%s%s%s\n" \
-        "%{l}" "%{A:wenu:} w %{A}" \
+        "%{l}" "%{A:menu-windows:} w %{A}" \
         "%{c}" "${time}" \
-        "%{r}" "${notif} ${bat}";
+        "%{r}" "${notif} ${net} ${bat} ";
 done < "$HUD_FIFO" |\
     lemonbar -n hud -d -gx20 -f 'Luxi Mono:size=10' \
              -B#dd222222 -F#ddd | sh &

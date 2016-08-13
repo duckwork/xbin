@@ -1,0 +1,14 @@
+#!/bin/sh
+
+REPLACE=0;
+NOTIFY_FIFO="${NOTIFY_FIFO:-/tmp/notify.fifo}"
+
+while expr "$1" : "-.*" >/dev/null 2>&1; do
+    case "$1" in
+        -r) REPLACE=1 ;;
+        # TODO: implement this!
+    esac
+    shift;
+done
+
+echo "$@" > "$NOTIFY_FIFO";

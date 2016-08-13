@@ -1,7 +1,7 @@
 #!/bin/sh
 # Window Under Point
 
-. ./util.sh
+. util.sh
 ARGS="[<x> <y>]"
 
 if [ $# -eq 0 ]; then
@@ -12,7 +12,7 @@ else
 fi
 
 for wid in $(lsw | tac); do
-    getwpos w $wid;
+    reads wx wy ww wh -- wattr xywh $wid;
     test $wx -gt $x            && continue;
     test $wy -gt $y            && continue;
     test $(( wx + ww )) -lt $x && continue;

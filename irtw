@@ -1,7 +1,7 @@
 #!/bin/sh
 # return a point In Regard To Window
 
-. ./util.sh
+. util.sh
 ARGS="<tl|tr|bl|br|md> <wid>"
 
 test $# -eq 2 || usage $ERRARG;

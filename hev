@@ -5,7 +5,6 @@
 #     exec $(realpath $0);
 # }
 # trap restart USR1;
-trap 'exit 1' USR2;
 
 wew | while IFS=: read ev wid; do
     . $WMRC;
@@ -42,9 +41,9 @@ wew | while IFS=: read ev wid; do
                     ignw -s $wid;
                     ;;
                 mpv)
+                    chwb -s 0 $wid;
                     wtp $(wattr xywh $WRT);
                     # placew $wid;
-                    chwb -s 0 $wid;
                     ;;
                *) # default
                    blur;

@@ -1,0 +1,46 @@
+#!/usr/bin/bash
+
+NOTIFY_FIFO="${NOTIFY_FIFO:-/tmp/notify.fifo}"
+NOTIFY_COUNTER="${NOTIFY_COUNTER:-/tmp/notify.count}"
+test -p $NOTIFY_FIFO || mkfifo $NOTIFY_FIFO
+rm "$NOTIFY_COUNTER" >/dev/null 2>&1
+
+restart() {
+    rm "$NOTIFY_FIFO";
+    exec "$(which $0)";
+}
+trap restart USR1;
+
+PFD="$(pfd)"
+MX="$(dattr -x $PFD)"
+MY="$(dattr -y $PFD)"
+MW="$(dattr -w $PFD)"
+MH="$(dattr -h $PFD)"
+
+NW=200; NH=20;
+
+gn() {
+    cat "$NOTIFY_COUNTER";
+}
+sn() {
+    echo "$1" > "$NOTIFY_COUNTER";
+}
+sn 0
+
+popup() {
+    x=$1; y=$2; w=$3; h=$4; shift 4;
+    { echo "%{r}$@ "; sleep 3; } | \
+    lemonbar -d -n popup -B#222 \
+    -g ${w}x${h}+${x}+${y}
+}
+
+tail -f "$NOTIFY_FIFO" | \
+while IFS= read -r message; do
+    sn "$(( $(gn) + 1 ))";
+    {
+        NX=$(( MX + MW - (NW + 2) ))
+        NY=$(( MY + 20 + ( $(gn) - 1) * NH ))
+        popup $NX $NY $NW $NH "$message";
+        sn "$(( $(gn) - 1 ))";
+    } &
+done

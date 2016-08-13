@@ -1,11 +1,20 @@
 #!/bin/sh
 
+set -o pipefail
+
 DMENU_OPTS="-i -n -p w -h 20 -w 350 -l 10"
 
 n=1;
 lsw | tac | xargs wi -id title |\
-while read wid wtitle; do
+while read -r wid wtitle; do
     printf '%s: %s (%s)\n' $n "${wtitle}" $wid;
     n=$((n + 1));
-done | dmenu $DMENU_OPTS -fn 'Luxi Mono:size=10' | \
-       sed 's/.*(\(.*\))$/\1/' | xargs fw -p -r;
+done | tee /tmp/wins_$$ | \
+case $(wc -l) in
+    1) notify "Only one window!";
+        fw </tmp/wins_$$;
+        ;;
+    *) dmenu $DMENU_OPTS -fn 'Luxi Mono:size=10' </tmp/wins_$$ | \
+       sed 's/.*(\(.*\))$/\1/' | xargs fw -p -r
+        ;;
+esac

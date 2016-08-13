@@ -1,6 +1,6 @@
 #!/bin/sh
 
-. ./util.sh
+. util.sh
 ARGS="[<x> <y>]"
 
 test $# -eq 0 && {
