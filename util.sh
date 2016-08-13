@@ -1,16 +1,16 @@
 # Utility functions
 
-setwb() { # <wid> <scheme>
+setwb() { # <scheme> <wid>
     test $# -eq 2 || return $ERRARG;
-    wattr $1 || return $ERRWIN;
-    test "$(wattr xywh $1)" != "$(wattr xywh $WRT)" || {
-        chwb -s 0 $1;
+    wattr $2 || return $ERRWIN;
+    test "$(wattr xywh $2)" != "$(wattr xywh $WRT)" || {
+        chwb -s 0 $2;
         return;
     }
-    case $2 in
-        Norm*) chwb -s $BW -c $CNorm $1 ;;
-        Foc*)  chwb -s $BW -c $CFoc  $1 ;;
-        Attn)  chwb -s $BW -c $CAttn $1 ;;
+    case $1 in
+        Norm*) chwb -s $BW -c $CNorm $2 ;;
+        Foc*)  chwb -s $BW -c $CFoc  $2 ;;
+        Attn)  chwb -s $BW -c $CAttn $2 ;;
         None)  chwb -s 0                ;;
         *)     return $ERRARG           ;;
     esac
