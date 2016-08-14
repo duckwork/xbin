@@ -1,0 +1,61 @@
+#!/bin/sh
+# MoVe Window (sane defaults)
+
+. $WMRC
+. util.sh
+ARGS="[-p|-m] <dir> <wid>"
+
+WARP_POINTER=0;
+MOUSE_RESIZE=0;
+SW=$(wattr w $WRT);
+SH=$(wattr h $WRT);
+
+while expr "$1" : "-*" >/dev/null 2>&1; do
+    case "$1" in
+        -p) WARP_POINTER=1 ;;
+        -m) MOUSE_RESIZE=1 ;;
+    esac
+    shift;
+done
+
+case "$2" in
+    0x*) wid="$2"    ;;
+    '')  wid="$PFW"  ;;
+    *)   wid="$($@)" ;;
+esac
+
+test $MOUSE_RESIZE -eq 1 && {
+    WUP=$(wup);
+    fw -r $WUP;
+    chwb -c $CAttn $WUP;
+    xmmv $WUP;
+}
+
+reads wx wy ww wh -- wattr xywh $wid ;
+echo $wx $wy $ww $wh
+
+_mvh() {
+    test $wx -gt $(( LGAP + BW*2 )) || return 1;
+    wmv -${STEP} 0 $1;
+}
+_mvl() {
+    test $(( wx + ww )) -lt $(( SW - RGAP - BW*2)) || return 1;
+    wmv ${STEP} 0 $1;
+}
+_mvk() {
+    test $wy -gt $(( TGAP + BW*2 )) || return 1;
+    wmv 0 -${STEP} $1;
+}
+_mvj() {
+    test $(( wy + wh )) -lt $(( SH - BGAP - BW*2)) || return 1;
+    wmv 0 ${STEP} $1;
+}
+
+case "$1" in
+    h) _mvh $wid || wtp $LGAP $wy $ww $wh $wid ;;
+    j) _mvj $wid || wtp $wx $(( SH - BGAP - wh - BW*2)) $ww $wh $wid ;;
+    k) _mvk $wid || wtp $wx $TGAP $ww $wh $wid ;;
+    l) _mvl $wid || wtp $(( SW - RGAP - ww - BW*2 )) $wy $ww $wh $wid ;;
+esac
+
+test $WARP_POINTER -eq 1 && wmp $(irtw md $wid);

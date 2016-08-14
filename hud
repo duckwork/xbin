@@ -44,7 +44,7 @@ while read -r line; do
         "%{c}" "${time}" \
         "%{r}" "${notif} ${net} ${bat} ";
 done < "$HUD_FIFO" |\
-    lemonbar -n hud -d -gx20 -f 'Luxi Mono:size=10' \
+    lemonbar -n hud -d -gx${HUDH} -f 'Luxi Mono:size=10' \
              -B#dd${CBG} -F#${CFG} | sh &
 
 wait;

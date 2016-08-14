@@ -1,0 +1,38 @@
+#!/bin/sh
+# ReSize Window (sane defaults)
+# TODO: make it more so sane with <shrink, grow>
+
+. $WMRC
+ARGS="<dir> [wid]"
+
+WARP_POINTER=0;
+MOUSE_RESIZE=0;
+
+while expr "$1" : "-*" >/dev/null 2>&1; do
+    case "$1" in
+        -p) WARP_POINTER=1 ;;
+        -m) MOUSE_RESIZE=1 ;;
+    esac
+    shift;
+done
+
+case "$2" in
+    0x*) wid="$2"   ;;
+    *)   wid="$PFW" ;;
+esac
+
+test $MOUSE_RESIZE -eq 1 && {
+    WUP=$(wup);
+    fw -r $WUP;
+    chwb -c $CAttn $WUP;
+    xmrs $WUP;
+}
+
+case "$1" in
+    h|left|west)  wrs -${STEP} 0        $wid ;;
+    l|right|east) wrs ${STEP}  0        $wid ;;
+    k|up|north)   wrs 0        -${STEP} $wid ;;
+    j|down|south) wrs 0        ${STEP}  $wid ;;
+esac
+
+test $WARP_POINTER -eq 1 && wmp $(irtw md $wid);
