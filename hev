@@ -25,10 +25,18 @@ wew | while IFS=: read ev wid; do
                     ;;
             *) case "$(wi class $wid)" in
                *) # default
-                wattr o $wid || {
-                    cw -m up $wid;
-                    fw $wid;
-                }
+               case "$(xprop -id $wid|grep _NET_WM_STATE|cut -d= -f2)" in
+                   *FULLSCREEN*)
+                       wtp 0 0 $(wattr w $WRT) $(wattr h $WRT) $wid;
+                       chwso -r $wid;
+                       ;;
+                   *)
+                    wattr o $wid || {
+                        cw -m up $wid;
+                        fw $wid;
+                    }
+                    ;;
+                esac
                ;;
                esac
                ;;
