@@ -1,6 +1,7 @@
 #!/usr/bin/bash
 
 . $WMRC
+. util.sh
 
 NOTIFY_FIFO="${NOTIFY_FIFO:-/tmp/notify.fifo}"
 NOTIFY_COUNTER="${NOTIFY_COUNTER:-/tmp/notify.count}"
@@ -13,11 +14,13 @@ restart() {
 }
 trap restart USR1;
 
-PFD="$(pfd)"
-MX="$(dattr -x $PFD)"
-MY="$(dattr -y $PFD)"
-MW="$(dattr -w $PFD)"
-MH="$(dattr -h $PFD)"
+# PFD="$(pfd)"
+# MX="$(dattr -x $PFD)"
+# MY="$(dattr -y $PFD)"
+# MW="$(dattr -w $PFD)"
+# MH="$(dattr -h $PFD)"
+MX=0; MY=0;
+reads MW MH -- wattr wh $(lsw -r)
 
 NW=200; NH=20;
 
@@ -40,7 +43,7 @@ tail -f "$NOTIFY_FIFO" | \
 while IFS= read -r message; do
     sn "$(( $(gn) + 1 ))";
     {
-        NX=$(( MX + MW - (NW + 2) ))
+        NX=$(( MX + MW - NW ))
         NY=$(( MY + 20 + ( $(gn) - 1) * NH ))
         popup $NX $NY $NW $NH "$message";
         sn "$(( $(gn) - 1 ))";
