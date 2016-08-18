@@ -68,7 +68,10 @@ swc() { # <hv|hh|q|m> <corner> <wid>
 }
 
 getwindowcorner() { # <wid>
-    reads wx wy ww wh -- wattr xywh "$1";
+    case "$1" in
+        0x*) reads wx wy ww wh -- wattr xywh "$1";          ;;
+        *)   test $# -eq 2 && wx="$1"; wy="$2"; ww=0; wh=0; ;;
+    esac
     cx=$((wx + ww / 2)); cy=$((wy + wh / 2));
     test $cx -lt $(( SW / 2 )) && {
         test $cy -lt $(( SH / 2 )) && {
@@ -165,4 +168,6 @@ resizew() { # <direction> <wid>
 case "$1" in
     -r) resizew $2 $3; fw -p $3 ;;
     -m) shiftw $2 $3; fw -p $3 ;;
+    -c) swc q $2 $3; fw -p $3 ;;
+    -p) swc q $(getwindowcorner $(wmp)) $2; fw -p $2;
 esac

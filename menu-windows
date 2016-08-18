@@ -2,10 +2,11 @@
 
 set -o pipefail
 
-DMENU_OPTS="-i -n -p w -h 20 -w 350 -l 10"
+DMENU_OPTS="-i -n -p w -h 20 -w 400 -l 10"
 
 n=1;
-lsw | tac | xargs wi -id title |\
+{ lsw; lsw -u; } | tac | xargs wi -id title |\
+grep -vE '_NET_WM_NAME:\s+not found' |\
 while read -r wid wtitle; do
     printf '%s: %s (%s)\n' $n "${wtitle}" $wid;
     n=$((n + 1));
@@ -15,6 +16,6 @@ case $(wc -l) in
         fw </tmp/wins_$$;
         ;;
     *) dmenu $DMENU_OPTS -fn 'Luxi Mono:size=10' </tmp/wins_$$ | \
-       sed 's/.*(\(.*\))$/\1/' | xargs fw -p -r
+       sed 's/.*(\(.*\))$/\1/' | xargs fw -p -r -m
         ;;
 esac

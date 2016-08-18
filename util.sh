@@ -3,10 +3,7 @@
 setwb() { # <scheme> <wid>
     test $# -eq 2 || return $ERRARG;
     wattr $2 || return $ERRWIN;
-    test "$(wattr xywh $2)" != "$(wattr xywh $WRT)" || {
-        chwb -s 0 $2;
-        return;
-    }
+    isFullscreen $2 && { chwb -s 0 $2; return; }
     case $1 in
         Norm*) chwb -s $BW -c $CNorm $2 ;;
         Foc*)  chwb -s $BW -c $CFoc  $2 ;;
@@ -16,15 +13,8 @@ setwb() { # <scheme> <wid>
     esac
 }
 
-# getwpos() { # <var_prefix> <wid>
-#     test $# -eq 2 || return $ERRARG;
-#     test "$1" = "-" && pf="" || pf="$1";
-#     read ${pf}x ${pf}y ${pf}w ${pf}h ${pf}id << END
-#     $(wattr xywhi $2)
-# END
-# }
-
 getwid() { # <regex>
+    t=$(mktemp)
     for wid in $(lsw); do
         printf '%s\t%s\n' "$wid" \
             "$(xprop -id "$wid" | sed -rn '
@@ -33,10 +23,12 @@ getwid() { # <regex>
                 /_NET_WM_PID/s/^.*=\s+(.*)$/\1/p' |\
               tr '\n' '\t')"
     done | \
-        grep -iE "$@" | cut -f1 | \
-        while read -r result; do
-            echo "$result"; # FIXME: exit failure for empty
-        done
+        grep -iE "$@" | cut -f1 >$t;
+    if [ $(wc -l $t) -gt 0 ]; then
+        cat $t;
+    else
+        return 1;
+    fi
 }
 
 isExecutable() { # <func|file>
@@ -46,6 +38,19 @@ isExecutable() { # <func|file>
 isInt() { # <var>
     test $1 -ne 0 2>/dev/null;
     test $? -ne 2 || return 1;
+}
+
+isFullscreen() { # <wid>
+    case "$(xprop -id $1 | grep _NET_WM_STATE | cut -d= -f2)" in
+        *FULLSCREEN*) return 0; ;;
+        *)
+            if [ "$(wattr xywh $1)" = "$(wattr xywh $WRT)" ]; then
+                return 0;
+            else
+                return 1;
+            fi
+            ;;
+    esac
 }
 
 flag() { # <var>

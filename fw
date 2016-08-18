@@ -7,6 +7,7 @@ ARGS="<wid|func->wid>"
 
 WINDOW_RAISE=0;
 WARP_POINTER=0;
+MAP_WINDOW=0; # why would you ever NOT want to map the window?
 
 focid() { # <wid>
     wattr $1 2>/dev/null || \
@@ -15,9 +16,11 @@ focid() { # <wid>
     setwb Normal $PFW;
     setwb Focus  $1;
     # set window shadows
-    xprop -id $PFW -f WM_FOCUS 8c -set WM_FOCUS 0;
-    xprop -id $1   -f WM_FOCUS 8c -set WM_FOCUS 1;
+    xprop -id $PFW -f WM_FOCUS_SHADOW 8c -set WM_FOCUS_SHADOW 0;
+    xprop -id $1   -f WM_FOCUS_SHADOW 8c -set WM_FOCUS_SHADOW 1;
+    echo "N%{F#$CAttn}$(wi title $1)%{F-}" >$HUD_FIFO;
     # raise window / warp pointer depending on flags
+    flag $MAP_WINDOW   && mapw -m $1;
     flag $WINDOW_RAISE && chwso -r $1;
     flag $WARP_POINTER && wmp $(irtw md $1);
     # finally, focus the window
@@ -29,6 +32,7 @@ while expr "$1" : "-.*" >/dev/null 2>&1; do
     case "$1" in
         -r) WINDOW_RAISE=1 ;;
         -p) WARP_POINTER=1 ;;
+        -m) MAP_WINDOW=1   ;;
         -h) usage $SUCCESS ;;
         *)  usage $ERRARG  ;;
     esac

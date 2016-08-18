@@ -11,8 +11,6 @@ restart() {
 }
 trap restart USR1;
 
-output="";
-
 if [ -f /tmp/hud.pid ]; then
     printf '%s\n' "hud is already running" >&2;
     exit $ERREXE;

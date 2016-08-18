@@ -1,12 +1,13 @@
 #!/bin/sh
 # Handle EVents
 
-# restart() {
-#     exec $(realpath $0);
-# }
-# trap restart USR1;
+restart() {
+    exec $(realpath $0);
+}
+trap restart USR1;
+. util.sh;
 
-wew | while IFS=: read ev wid; do
+wew -m $((16+32+4194304)) | while IFS=: read ev wid atom; do
     . $WMRC;
     case $ev in
         7) # XCB_ENTER_NOTIFY
@@ -20,23 +21,19 @@ wew | while IFS=: read ev wid; do
             case "$(wi name $wid)" in
                 hud)
                     chwb -s 0 $wid;
-                    chwso -r $wid;
+                    chwso -l $wid;
                     ignw -s $wid;
                     ;;
+                st*) cw -p $wid; ;;
             *) case "$(wi class $wid)" in
                *) # default
-               case "$(xprop -id $wid|grep _NET_WM_STATE|cut -d= -f2)" in
-                   *FULLSCREEN*)
-                       wtp 0 0 $(wattr w $WRT) $(wattr h $WRT) $wid;
-                       chwso -r $wid;
-                       ;;
-                   *)
+                    isFullscreen $wid && {
+                        wtp 0 0 $(wattr w $WRT) $(wattr h $WRT) $wid;
+                        chwso -r $wid;
+                    }
                     wattr o $wid || {
-                        cw -m up $wid;
                         fw $wid;
                     }
-                    ;;
-                esac
                ;;
                esac
                ;;
@@ -72,6 +69,13 @@ wew | while IFS=: read ev wid; do
                ;;
                esac
                ;;
+            esac
+            ;;
+        28) # XCB_EVENT_MASK_PROPERTY_CHANGE
+            case $atom in
+                39) # XCB_ATOM_WM_NAME
+                    echo "N%{F#$CAttn}$(wi title $wid)%{F-}" >$HUD_FIFO;
+                    ;;
             esac
             ;;
     esac

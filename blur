@@ -10,6 +10,7 @@ test -f $WALL || {
 
 if [ $(lsw | wc -l) -eq 0 ]; then
     BLUR=0;
+    echo "N" >$HUD_FIFO;
 else
     BLUR=${1:-10};
 fi
