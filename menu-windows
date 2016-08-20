@@ -2,20 +2,21 @@
 
 set -o pipefail
 
-DMENU_OPTS="-i -n -p w -h 20 -w 400 -l 10"
+DMENU_OPTS="-i -n -p w -h 20 -w 400 -l 10 -uh 1"
 
-n=1;
+n=1; wins=$(mktemp);
 { lsw; lsw -u; } | tac | xargs wi -id title |\
 grep -vE '_NET_WM_NAME:\s+not found' |\
 while read -r wid wtitle; do
+    wattr o $wid && continue;
     printf '%s: %s (%s)\n' $n "${wtitle}" $wid;
     n=$((n + 1));
-done | tee /tmp/wins_$$ | \
-case $(wc -l) in
+done > $wins
+case $(wc -l <$wins) in
     1) notify "Only one window!";
-        fw </tmp/wins_$$;
+        fw <$wins;
         ;;
-    *) dmenu $DMENU_OPTS -fn 'Luxi Mono:size=10' </tmp/wins_$$ | \
+    *) dmenu $DMENU_OPTS <$wins | \
        sed 's/.*(\(.*\))$/\1/' | xargs fw -p -r -m
         ;;
 esac
