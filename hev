@@ -24,6 +24,9 @@ wew -m $((16+32+4194304)) | while IFS=: read ev wid atom; do
                     chwso -l $wid;
                     ignw -s $wid;
                     ;;
+                alsamixer)
+                    wmv -a $(($(wattr w $WRT)/2)) $(($(wattr h $WRT)/2)) $wid;
+                    ;;
                 st*) cw -p $wid; ;;
             *) case "$(wi class $wid)" in
                *) # default
@@ -46,7 +49,7 @@ wew -m $((16+32+4194304)) | while IFS=: read ev wid atom; do
                     chwso -r $wid;
                     ignw -s $wid;
                     ;;
-                mpv)
+                mpv*)
                     chwb -s 0 $wid;
                     wtp $(wattr xywh $WRT);
                     # placew $wid;
@@ -74,7 +77,8 @@ wew -m $((16+32+4194304)) | while IFS=: read ev wid atom; do
         28) # XCB_EVENT_MASK_PROPERTY_CHANGE
             case $atom in
                 39) # XCB_ATOM_WM_NAME
-                    echo "N%{F#$CAttn}$(wi title $wid)%{F-}" >$HUD_FIFO;
+                    isFocused $wid && \
+                    echo "N%{F#$CAttn}$(trim 40 wi title $wid)%{F-}" >$HUD_FIFO;
                     ;;
             esac
             ;;

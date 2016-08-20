@@ -18,7 +18,7 @@ focid() { # <wid>
     # set window shadows
     xprop -id $PFW -f WM_FOCUS_SHADOW 8c -set WM_FOCUS_SHADOW 0;
     xprop -id $1   -f WM_FOCUS_SHADOW 8c -set WM_FOCUS_SHADOW 1;
-    echo "N%{F#$CAttn}$(wi title $1)%{F-}" >$HUD_FIFO;
+    echo "N%{F#$CAttn}$(trim 40 wi title $1)%{F-}" >$HUD_FIFO;
     # raise window / warp pointer depending on flags
     flag $MAP_WINDOW   && mapw -m $1;
     flag $WINDOW_RAISE && chwso -r $1;
