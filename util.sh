@@ -24,7 +24,7 @@ getwid() { # <regex>
               tr '\n' '\t')"
     done | \
         grep -iE "$@" | cut -f1 >$t;
-    if [ $(wc -l $t) -gt 0 ]; then
+    if [ "$(wc -l <$t)" -gt 0 ]; then
         cat $t;
     else
         return 1;
@@ -53,6 +53,10 @@ isFullscreen() { # <wid>
     esac
 }
 
+isFocused() { # <wid>
+    test "$(pfw)" = "$1";
+}
+
 flag() { # <var>
     test $1 -eq 1;
 }
@@ -75,4 +79,9 @@ reads() { # <vars..> -- <func>
     read $read_vars << END
     $($@)
 END
+}
+
+trim() { # <length> <command>
+    len=$1; shift;
+    ${@} | head -c${len};
 }
